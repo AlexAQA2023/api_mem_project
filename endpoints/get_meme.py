@@ -11,6 +11,7 @@ class GetMeme(BaseApi):
         self.response_json = self.response.json()
 
     @allure.step('Check whether if token is still alive')
-    def check_token_is_live(self, token):
+    def is_token_alive(self, token):
         self.response = requests.get(f'{base_url}/authorize/{token}')
-        self.response_json = self.response.text
+        text = self.response.text
+        return text

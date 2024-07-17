@@ -17,6 +17,6 @@ def test_get_all_meme(get_meme):
 
 
 def test_is_token_alive(get_meme, get_fix_token):
-    get_meme.check_token_is_live(get_fix_token)
+    get_meme.is_token_alive(get_fix_token)
     assert get_meme.check_status_code_is_(200)
     assert 'Token is alive' in get_meme.response.text
