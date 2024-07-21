@@ -14,5 +14,10 @@ class PostAuth(BaseApi):
             json=payload,
             headers=headers
         )
-        self.response_json = self.response.json()
-        print(self.response_json)
+        try:
+            self.response_json = self.response.json()
+        except requests.exceptions.JSONDecodeError:
+            self.response_json = None
+            print(f"Failed to decode JSON response. Status code: {self.response.status_code}")
+            print(f"Response text: {self.response.text}")
+            print(self.response_json)

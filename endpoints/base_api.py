@@ -15,3 +15,7 @@ class BaseApi:
     @allure.step('Check user auth name')
     def check_response_title_is_(self, name):
         return self.response.json()['user'] == name
+
+    @allure.step('Check user auth name')
+    def check_negative_response_title_is_(self, title):
+        return self.response.json()['title'] == title

@@ -2,6 +2,7 @@ headers_template = {
     'Content-Type': 'application/json',
 }
 
-token_template = {
-
-}
+# auth_headers = {
+#     'Authorization': 'iZ0ughjsEBrJloa',
+#     'Content-Type': 'application/json'
+# }
