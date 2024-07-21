@@ -11,14 +11,8 @@ class PostMeme(BaseApi):
             f'{base_url}/meme',
 
             headers={
-                'Authorization': token,
+                'Authorization': {token},
                 'Content-Type': 'application/json'
             },
             json=payload)
-        if self.response.status_code == 200:
-            try:
-                self.response_json = self.response.json()
-            except requests.exceptions.JSONDecodeError:
-                self.response_json = None
-        else:
-            self.response_json = None
+        self.check_json_decoder_error()

@@ -19,3 +19,12 @@ class BaseApi:
     @allure.step('Check user auth name')
     def check_negative_response_title_is_(self, title):
         return self.response.json()['title'] == title
+
+    def check_json_decoder_error(self):
+        if self.response.status_code == 200:
+            try:
+                self.response_json = self.response.json()
+            except requests.exceptions.JSONDecodeError:
+                self.response_json = None
+        else:
+            self.response_json = None

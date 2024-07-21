@@ -5,7 +5,7 @@ import allure
 
 class PutMeme(BaseApi):
     @allure.step('update created meme')
-    def update_mem(self, payload, token):
+    def update_mem(self, payload, token, meme_id):
         self.response = requests.put(
             f'{base_url}/meme',
 
@@ -14,10 +14,4 @@ class PutMeme(BaseApi):
                 'Content-Type': 'application/json'
             },
             json=payload)
-        if self.response.status_code == 200:
-            try:
-                self.response_json = self.response.json()
-            except requests.exceptions.JSONDecodeError:
-                self.response_json = None
-        else:
-            self.response_json = None
+        self.check_json_decoder_error()

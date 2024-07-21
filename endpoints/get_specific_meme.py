@@ -1,14 +1,12 @@
 import requests
 import allure
-
 from endpoints.base_api import BaseApi, base_url
 
 
-class GetMeme(BaseApi):
-
-    @allure.step('get all memes')
-    def get_all_meme(self, token):
-        self.response = requests.get(f'{base_url}/meme',
+class GetSpecificMeme(BaseApi):
+    @allure.step('Find specific meme by id')
+    def find_meme_by_id(self,token,meme_id):
+        self.response = requests.get(f'{base_url}/meme/{meme_id}',
                                      headers={
                                          'Authorization': token,
                                          'Content-Type': 'application/json'
@@ -20,9 +18,3 @@ class GetMeme(BaseApi):
             self.response_json = None
             print(f"Failed to decode JSON response. Status code: {self.response.status_code}")
             print(f"Response text: {self.response.text}")
-
-    @allure.step('Check whether if token is still alive')
-    def is_token_alive(self, token):
-        self.response = requests.get(f'{base_url}/authorize/{token}')
-        text = self.response.text
-        return text
