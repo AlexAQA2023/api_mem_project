@@ -17,7 +17,7 @@ def create_token():
 
 
 @pytest.fixture()
-def get_all_meme():
+def get_overall_meme_set():
     return GetAllMeme()
 
 
@@ -41,19 +41,9 @@ def create_meme():
     return PostMeme()
 
 
-@pytest.fixture(scope='session')
-def extract_token(create_token):
-    def extract_token():
-        payload = token_payload
-        response = requests.post(f'{base_url}/authorize', json=payload)
-
-        if response.status_code == 200:
-            token = response.json().get('token')
-            return token
-        else:
-            print(f"Failed to authorize. Status code: {response.status_code}")
-            print(f"Response text: {response.text}")
-            return None
+# @pytest.fixture(scope='session')
+# def extract_token(create_token):
+#     return create_token
 
 
 @pytest.fixture()
