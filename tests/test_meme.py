@@ -91,43 +91,41 @@ def test_is_token_alive(get_is_live_token, get_token):
 def test_create_meme_with_all_field_filled(create_meme, get_token):
     create_meme.create_meme(create_meme_payload, get_token)
     assert create_meme.check_status_code_is_(200)
+    assert create_meme.response_json['url'] == create_meme_payload['url']
 
-# @allure.feature('meme creation')
-# @allure.story('meme creation capability')
-# @allure.description('check that system doesnt create  meme without mandatory fields')
-# @allure.tag("High")
-# @allure.severity('Negative')
-# def test_create_meme_without_mandatory_text_field(create_meme, extract_token):
-#     if extract_token:
-#         create_meme.create_meme(payload=create_meme_payload_without_text_field, token=extract_token)
-#         assert create_meme.check_status_code_is_(400)
-#         assert '400 Bad Request' in create_meme.response.text
-#
-#
-# def test_create_meme_with_wrong_format_tag_field(create_meme, extract_token):
-#     if extract_token:
-#         create_meme.create_meme(payload=create_meme_payload_with_wrong_format_tag_field, token=extract_token)
-#         assert create_meme.check_status_code_is_(400)
-#         assert '400 Bad Request' in create_meme.response.text
-#
-#
-# def test_create_meme_with_invalid_token(create_meme, extract_token):
-#     extract_token = extract_token + 'test'
-#     create_meme.create_meme(payload=create_meme_payload, token=extract_token)
-#     assert create_meme.check_status_code_is_(401)
-#     assert '401 Unauthorized' in create_meme.response.text
-#
-#
-# def test_update_meme_with_valid_data(create_meme, update_meme, extract_token):
-#     if extract_token:
-#         payload_upd = payloads.update_meme_payload
-#         create_meme.create_meme(payload=create_meme_payload, token=extract_token)
-#         created_meme_id = create_meme.response_json['id']
-#         update_meme.update_mem(payload_upd, extract_token, created_meme_id)
-#         assert update_meme.check_status_code_is_(200)
-#         assert update_meme.response_json['text'] == payload_upd['text']
-#
-#
+
+@allure.feature('meme creation')
+@allure.story('meme creation capability')
+@allure.description('check that system doesnt create  meme without mandatory fields')
+@allure.tag("High")
+@allure.severity('Negative')
+def test_create_meme_without_mandatory_text_field(create_meme, get_token):
+    create_meme.create_meme(create_meme_payload_without_text_field, get_token)
+    assert create_meme.check_status_code_is_(400)
+    assert '400 Bad Request' in create_meme.response.text
+
+
+def test_create_meme_with_wrong_format_tag_field(create_meme, get_token):
+    create_meme.create_meme(create_meme_payload_with_wrong_format_tag_field, get_token)
+    assert create_meme.check_status_code_is_(400)
+    assert '400 Bad Request' in create_meme.response.text
+
+
+def test_create_meme_with_invalid_token(create_meme, get_token):
+    get_token = get_token + 'test'
+    create_meme.create_meme(create_meme_payload, get_token)
+    assert create_meme.check_status_code_is_(401)
+    assert '401 Unauthorized' in create_meme.response.text
+
+
+def test_update_meme_with_valid_data(create_default_meme, update_meme, get_token):
+    token = get_token
+    payload_upd = payloads.update_meme_payload
+    payload_upd['id'] = create_default_meme
+    update_meme.update_mem(payload_upd, token, payload_upd['id'])
+    assert update_meme.check_status_code_is_(200)
+    assert update_meme.response_json['text'] == payloads.update_meme_payload['text']
+
 # def test_update_meme_with_wrong_format_id_field(create_meme, update_meme, extract_token):
 #     if extract_token:
 #         payload_upd = payloads.update_meme_payload_with_invalid_id

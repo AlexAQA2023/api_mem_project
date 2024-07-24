@@ -32,7 +32,6 @@ default_meme_payload = {
 }
 
 create_meme_payload_without_text_field = {
-    "text": "google joke",
     "url": "https://images.app.goo.gl/6apzw1kD4LwQJVJK6",
     "tags": ["it meme"],
     "info": {
