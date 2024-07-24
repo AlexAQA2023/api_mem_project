@@ -9,7 +9,6 @@ class BaseApi:
     response_json: dict
     token: str
     response_meme: requests.Response
-    meme_json: dict
 
     @allure.step('Check status code')
     def check_status_code_is_(self, code):

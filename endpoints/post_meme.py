@@ -11,8 +11,7 @@ class PostMeme(BaseApi):
             f'{base_url}/meme',
 
             headers={
-                'Authorization': {token},
-                'Content-Type': 'application/json'
+                'Authorization': token,
             },
             json=payload)
         self.check_json_decoder_error()

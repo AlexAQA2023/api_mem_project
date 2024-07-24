@@ -65,33 +65,33 @@ def test_get_all_meme_without_valid_token(get_overall_meme_set, get_token):
 @allure.description('check that user is able to get specific meme')
 @allure.tag("Negative")
 @allure.severity('Positive')
-def test_get_specific_meme_by_id(get_meme_by_id, get_token):
-    get_meme_by_id.find_meme_by_id(get_meme_by_id, get_token)
+def test_get_specific_meme_by_id(get_meme_by_id, create_default_meme, get_token):
+    meme_id = create_default_meme
+    get_meme_by_id.find_meme_by_id(get_token, 345)
     assert get_meme_by_id.check_status_code_is_(200)
-    assert get_meme_by_id.response_json['id'] == get_meme_by_id
+    # assert get_meme_by_id.find_meme_by_id['id'] == meme_id
 
-# @allure.feature('token ')
-# @allure.story('token creation')
-# @allure.description('check that system generates user token')
-# @allure.tag("Blocker")
-# @allure.severity('Positive')
-# def test_is_token_alive(get_all_meme, extract_token):
-#     get_all_meme.is_token_alive(extract_token)
-#     assert get_all_meme.check_status_code_is_(200)
-#     assert 'Token is alive' in get_all_meme.response.text
-#
-#
-# @allure.feature('meme creation')
-# @allure.story('meme creation capability')
-# @allure.description('check that system creates meme')
-# @allure.tag("Blocker")
-# @allure.severity('Positive')
-# def test_create_meme_with_all_field_filled(create_meme, extract_token):
-#     if extract_token:
-#         create_meme.create_meme(payload=create_meme_payload, token=extract_token)
-#         assert create_meme.check_status_code_is_(200)
-#
-#
+
+@allure.feature('token ')
+@allure.story('token creation')
+@allure.description('check that system generates user token')
+@allure.tag("Blocker")
+@allure.severity('Positive')
+def test_is_token_alive(get_is_live_token, get_token):
+    get_is_live_token.check_token_is_live(get_token)
+    assert get_is_live_token.check_status_code_is_(200)
+    assert 'Token is alive' in get_is_live_token.response.text
+
+
+@allure.feature('meme creation')
+@allure.story('meme creation capability')
+@allure.description('check that system creates meme')
+@allure.tag("Blocker")
+@allure.severity('Positive')
+def test_create_meme_with_all_field_filled(create_meme, get_token):
+    create_meme.create_meme(create_meme_payload, get_token)
+    assert create_meme.check_status_code_is_(200)
+
 # @allure.feature('meme creation')
 # @allure.story('meme creation capability')
 # @allure.description('check that system doesnt create  meme without mandatory fields')

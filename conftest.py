@@ -4,20 +4,18 @@ import requests
 from endpoints.base_api import base_url
 from endpoints.delete_meme import DeleteMeme
 from endpoints.get_all_meme import GetAllMeme
+from endpoints.get_check_is_token_live import GetLiveToken
 from endpoints.get_specific_meme import GetSpecificMeme
 from endpoints.post_auth import PostAuth
 from endpoints.post_meme import PostMeme
 from endpoints.put_meme import PutMeme
 from tests.data.payloads import default_meme_payload, token_payload
 
-# @pytest.fixture(scope='session')
-# def create_token():
-#     return PostAuth()
 BASE_URL = "http://167.172.172.115:52355"
 AUTH_ENDPOINT = "/authorize"
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def get_token():
     payload = {
         "name": "string"
@@ -61,21 +59,20 @@ def create_meme():
     return PostMeme()
 
 
-# @pytest.fixture(scope='session')
-# def extract_token(create_token):
-#     return create_token
+@pytest.fixture()
+def get_is_live_token():
+    return GetLiveToken()
 
 
 @pytest.fixture()
-def create_default_meme():
+def create_default_meme(get_token):
     payload = default_meme_payload
     headers = {
-        'Authorization': f'Bearer {token}',
+        'Authorization': get_token
     }
 
     response = requests.post(f'{base_url}/meme', headers=headers, json=payload)
 
-    print(response.json())
     default_meme__id = response.json()['id']
     print(f'Created meme with id {response.json()["id"]}')
     yield default_meme__id

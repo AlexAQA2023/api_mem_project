@@ -4,8 +4,9 @@ from endpoints.base_api import BaseApi, base_url
 
 
 class GetSpecificMeme(BaseApi):
+
     @allure.step('Find specific meme by id')
-    def find_meme_by_id(self,token,meme_id):
+    def find_meme_by_id(self, token, meme_id):
         self.response = requests.get(f'{base_url}/meme/{meme_id}',
                                      headers={
                                          'Authorization': token,
@@ -13,8 +14,9 @@ class GetSpecificMeme(BaseApi):
                                      }
                                      )
         try:
-            self.response_json = self.response.json()
+            self.response_json = self.response.json()['id']
         except requests.exceptions.JSONDecodeError:
-            self.response_json = None
             print(f"Failed to decode JSON response. Status code: {self.response.status_code}")
             print(f"Response text: {self.response.text}")
+            self.response_json = {}
+        print(self.response_json)
