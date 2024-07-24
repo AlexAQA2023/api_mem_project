@@ -10,7 +10,7 @@ class GetAllMeme(BaseApi):
     def get_all_meme(self, token):
         self.response = requests.get(f'{base_url}/meme',
                                      headers={
-                                         'Authorization': f'Bearer {token}',
+                                         'Authorization': token,
                                          'Content-Type': 'application/json'
                                      })
         try:

@@ -43,35 +43,33 @@ def test_user_authorize_with_format_mandatory_field(create_token):
 @allure.description('check that user is able to get all meme')
 @allure.tag("Positive")
 @allure.severity('High')
-def test_get_all_meme_with_valid_token(create_token, get_overall_meme_set):
-    get_overall_meme_set.get_all_meme(token=create_token)
+def test_get_all_meme_with_valid_token(get_token, get_overall_meme_set):
+    get_overall_meme_set.get_all_meme(get_token)
     assert get_overall_meme_set.check_status_code_is_(200)
 
-#
-# @allure.feature('meme set')
-# @allure.story('collect all meme')
-# @allure.description('check that user is not able to get all meme')
-# @allure.tag("Negative")
-# @allure.severity('High')
-# def test_get_all_meme_without_valid_token(get_all_meme, extract_token):
-#     extract_token = extract_token + 'test'
-#     get_all_meme.get_all_meme(extract_token)
-#     assert get_all_meme.check_status_code_is_(401)
-#     assert '401 Unauthorized' in get_all_meme.response.text
-#
-#
-# @allure.feature('meme set')
-# @allure.story('collect all meme')
-# @allure.description('check that user is able to get specific meme')
-# @allure.tag("Negative")
-# @allure.severity('Positive')
-# def test_get_specific_meme_by_id(get_meme_by_id, extract_token):
-#     if extract_token:
-#         get_meme_by_id.find_meme_by_id(extract_token, get_meme_by_id)
-#         assert get_meme_by_id.check_status_code_is_(200)
-#         assert get_meme_by_id.response_json['id'] == get_meme_by_id
-#
-#
+
+@allure.feature('meme set')
+@allure.story('collect all meme')
+@allure.description('check that user is not able to get all meme')
+@allure.tag("Negative")
+@allure.severity('High')
+def test_get_all_meme_without_valid_token(get_overall_meme_set, get_token):
+    get_token = get_token + 'test'
+    get_overall_meme_set.get_all_meme(get_token)
+    assert get_overall_meme_set.check_status_code_is_(401)
+    assert '401 Unauthorized' in get_overall_meme_set.response.text
+
+
+@allure.feature('meme set')
+@allure.story('collect all meme')
+@allure.description('check that user is able to get specific meme')
+@allure.tag("Negative")
+@allure.severity('Positive')
+def test_get_specific_meme_by_id(get_meme_by_id, get_token):
+    get_meme_by_id.find_meme_by_id(get_meme_by_id, get_token)
+    assert get_meme_by_id.check_status_code_is_(200)
+    assert get_meme_by_id.response_json['id'] == get_meme_by_id
+
 # @allure.feature('token ')
 # @allure.story('token creation')
 # @allure.description('check that system generates user token')
