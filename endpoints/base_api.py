@@ -8,13 +8,11 @@ class BaseApi:
     response: requests.Response
     response_json: dict
     token: str
-    response_meme: requests.Response
 
     @allure.step('Check status code')
     def check_status_code_is_(self, code):
         print(self.response.status_code)
         return self.response.status_code == code
-
 
     @allure.step('Check user auth name')
     def check_response_title_is_(self, name):

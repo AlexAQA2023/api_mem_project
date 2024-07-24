@@ -78,8 +78,3 @@ def create_default_meme(get_token):
     yield default_meme__id
     requests.delete(f'{base_url}/{default_meme__id}')
     print(f'Deleted meme with id {default_meme__id}')
-
-
-@pytest.fixture()
-def delete_default_meme(create_default_meme):
-    pass

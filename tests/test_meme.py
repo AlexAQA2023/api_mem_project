@@ -126,37 +126,34 @@ def test_update_meme_with_valid_data(create_default_meme, update_meme, get_token
     assert update_meme.check_status_code_is_(200)
     assert update_meme.response_json['text'] == payloads.update_meme_payload['text']
 
-# def test_update_meme_with_wrong_format_id_field(create_meme, update_meme, extract_token):
-#     if extract_token:
-#         payload_upd = payloads.update_meme_payload_with_invalid_id
-#         create_meme.create_meme(payload=create_meme_payload, token=extract_token)
-#         created_meme_id = create_meme.response_json['id']
-#         update_meme.update_mem(payload_upd, extract_token, created_meme_id)
-#         assert update_meme.check_status_code_is_(400)
-#         assert 'Invalid parameters' in update_meme.response.text
+
+def test_update_meme_with_wrong_format_id_field(create_default_meme, update_meme, get_token):
+    token = get_token
+    payload_upd = payloads.update_meme_payload_with_invalid_id
+    payload_upd['id'] = "test"
+    update_meme.update_mem(payload_upd, token, payload_upd['id'])
+    assert update_meme.check_status_code_is_(404)
+    assert 'Not Found' in update_meme.response.text
+
+
+# def test_delete_meme(create_meme, get_token, delete_meme):
+#     create_meme.create_meme(create_meme_payload, get_token)
 #
 #
-# def test_update_your_college_meme(create_meme, update_meme, extract_token):
-#     if extract_token:
-#         payload_upd = payloads.update_alien_meme_payload
-#         create_meme.create_meme(payload=create_meme_payload, token=extract_token)
-#         created_meme_id = create_meme.response_json['id']
-#         update_meme.update_mem(payload_upd, extract_token, created_meme_id)
-#         assert update_meme.check_status_code_is_(403)
-#         assert 'You are not the meme owner' in update_meme.response.text
+#
+# def test_delete_already_deleted_meme_by_id(create_default_meme, get_token, delete_meme):
+#     delete_meme.delete_meme_by_id(create_default_meme, get_token)
+#     assert delete_meme.check_status_code_is_(200)
 #
 #
-# def test_delete_meme_by_id(create_meme, extract_token, delete_meme):
-#     if extract_token:
-#         create_meme.create_meme(payload=create_meme_payload, token=extract_token)
-#         created_meme_id = create_meme.response_json['id']
-#         delete_meme.delete_meme_by_id(created_meme_id, extract_token)
-#         assert delete_meme.check_status_code_is_(200)
-#         assert delete_meme == f'Meme with id {created_meme_id} successfully deleted'
+# def test_delete_alien_meme(create_meme, get_token, delete_meme):
+#     not_my_meme_id = 1231
+#     obsolete_token = "T0vW7i7YAmXgTXL"
+#     create_meme.create_meme(create_meme_payload, get_token)
+#     delete_meme.delete_meme_by_id(not_my_meme_id, obsolete_token)
+#     assert delete_meme.check_status_code_is_(403)
 #
 #
-# def test_delete_meme_by_non_existed_id(create_meme, extract_token, delete_meme):
-#     if extract_token:
-#         delete_meme.delete_meme_by_id(333, extract_token)
-#         assert delete_meme.check_status_code_is_(404)
-#         assert 'Not Found' in delete_meme
+# def test_delete_meme_by_non_existed_id(create_default_meme, get_token, delete_meme):
+#     delete_meme.delete_meme_by_id(create_default_meme, get_token)
+#     assert delete_meme.check_status_code_is_(404)
