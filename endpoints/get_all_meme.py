@@ -21,8 +21,13 @@ class GetAllMeme(BaseApi):
             self.response_json = {}
         print(self.response_json)
 
-@allure.step('Check whether if token is still alive')
-def is_token_alive(self, token):
-    self.response = requests.get(f'{base_url}/authorize/{token}')
-    text = self.response.text
-    return text
+    @allure.step('Check whether if token is still alive')
+    def is_token_alive(self, token):
+        self.response = requests.get(f'{base_url}/authorize/{token}')
+        text = self.response.text
+        return text
+
+    @allure.step('Check that the response data is not empty')
+    def is_meme_data_not_empty(self):
+        response_json = self.response
+        return len(response_json['data']) > 0

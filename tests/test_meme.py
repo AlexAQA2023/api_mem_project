@@ -1,3 +1,5 @@
+import random
+
 import allure
 
 from tests.data import payloads
@@ -46,6 +48,7 @@ def test_user_authorize_with_format_mandatory_field(create_token):
 def test_get_all_meme_with_valid_token(get_token, get_overall_meme_set):
     get_overall_meme_set.get_all_meme(get_token)
     assert get_overall_meme_set.check_status_code_is_(200)
+    assert get_overall_meme_set.is_meme_data_not_empty
 
 
 @allure.feature('meme set')
@@ -105,12 +108,22 @@ def test_create_meme_without_mandatory_text_field(create_meme, get_token):
     assert '400 Bad Request' in create_meme.response.text
 
 
+@allure.feature('meme creation')
+@allure.story('meme creation capability')
+@allure.description('check that system doesnt create  meme with wrong format tag field')
+@allure.tag("High")
+@allure.severity('Negative')
 def test_create_meme_with_wrong_format_tag_field(create_meme, get_token):
     create_meme.create_meme(create_meme_payload_with_wrong_format_tag_field, get_token)
     assert create_meme.check_status_code_is_(400)
     assert '400 Bad Request' in create_meme.response.text
 
 
+@allure.feature('meme creation')
+@allure.story('meme creation capability')
+@allure.description('check that system doesnt create  meme with invalid token')
+@allure.tag("High")
+@allure.severity('Negative')
 def test_create_meme_with_invalid_token(create_meme, get_token):
     get_token = get_token + 'test'
     create_meme.create_meme(create_meme_payload, get_token)
@@ -118,6 +131,11 @@ def test_create_meme_with_invalid_token(create_meme, get_token):
     assert '401 Unauthorized' in create_meme.response.text
 
 
+@allure.feature('meme update')
+@allure.story('meme update capability')
+@allure.description('check that system is able to update a mem')
+@allure.tag("High")
+@allure.severity('Positive')
 def test_update_meme_with_valid_data(create_default_meme, update_meme, get_token):
     token = get_token
     payload_upd = payloads.update_meme_payload
@@ -127,6 +145,11 @@ def test_update_meme_with_valid_data(create_default_meme, update_meme, get_token
     assert update_meme.response_json['text'] == payloads.update_meme_payload['text']
 
 
+@allure.feature('meme update')
+@allure.story('meme update capability')
+@allure.description('check that system isnt able to update a mem with wrong format id field')
+@allure.tag("High")
+@allure.severity('Negative')
 def test_update_meme_with_wrong_format_id_field(create_default_meme, update_meme, get_token):
     token = get_token
     payload_upd = payloads.update_meme_payload_with_invalid_id
@@ -136,6 +159,11 @@ def test_update_meme_with_wrong_format_id_field(create_default_meme, update_meme
     assert 'Not Found' in update_meme.response.text
 
 
+@allure.feature('meme delete')
+@allure.story('meme delete capability')
+@allure.description('check that system is able to delete a meme')
+@allure.tag("High")
+@allure.severity('Positive')
 def test_delete_meme(create_meme, get_token, delete_meme):
     token = get_token
     create_meme.create_meme(create_meme_payload, token)
@@ -143,20 +171,44 @@ def test_delete_meme(create_meme, get_token, delete_meme):
     delete_meme.delete_meme_by_id(meme_id, token)
     assert delete_meme.check_status_code_is_(200)
     assert f'Meme with id {meme_id} successfully deleted' in delete_meme.response.text
-#
-# def test_delete_already_deleted_meme_by_id(create_default_meme, get_token, delete_meme):
-#     delete_meme.delete_meme_by_id(create_default_meme, get_token)
-#     assert delete_meme.check_status_code_is_(200)
-#
-#
-# def test_delete_alien_meme(create_meme, get_token, delete_meme):
-#     not_my_meme_id = 1231
-#     obsolete_token = "T0vW7i7YAmXgTXL"
-#     create_meme.create_meme(create_meme_payload, get_token)
-#     delete_meme.delete_meme_by_id(not_my_meme_id, obsolete_token)
-#     assert delete_meme.check_status_code_is_(403)
-#
-#
-# def test_delete_meme_by_non_existed_id(create_default_meme, get_token, delete_meme):
-#     delete_meme.delete_meme_by_id(create_default_meme, get_token)
-#     assert delete_meme.check_status_code_is_(404)
+
+
+@allure.feature('meme delete')
+@allure.story('meme delete capability')
+@allure.description('check that system isnt to able delete already deleted meme')
+@allure.tag("High")
+@allure.severity('Negative')
+def test_delete_already_deleted_meme_by_id(create_meme, get_token, delete_meme):
+    token = get_token
+    create_meme.create_meme(create_meme_payload, token)
+    meme_id = create_meme.response.json()['id']
+    delete_meme.delete_meme_by_id(meme_id, token)
+    delete_meme.delete_meme_by_id(meme_id, token)
+    assert delete_meme.check_status_code_is_(404)
+    assert 'Not Found' in delete_meme.response.text
+
+
+@allure.feature('meme delete')
+@allure.story('meme delete capability')
+@allure.description('check that system isnt to able delete your colleagues meme')
+@allure.tag("High")
+@allure.severity('Negative')
+def test_delete_alien_meme(create_meme, get_token, delete_meme):
+    not_my_meme_id = 1231
+    obsolete_token = "T0vW7i7YAmXgTXL"
+    create_meme.create_meme(create_meme_payload, get_token)
+    delete_meme.delete_meme_by_id(not_my_meme_id, obsolete_token)
+    assert delete_meme.check_status_code_is_(123)
+    assert 'You are not the meme owner' in delete_meme.response.text
+
+
+@allure.feature('meme delete')
+@allure.story('meme delete capability')
+@allure.description('check that system isnt to able delete non-existed meme')
+@allure.tag("High")
+@allure.severity('Negative')
+def test_delete_meme_by_non_existed_id(create_meme, get_token, delete_meme):
+    meme_id = random.randrange(9000, 99999)
+    delete_meme.delete_meme_by_id(meme_id, get_token)
+    assert delete_meme.check_status_code_is_(404)
+    assert 'Not Found' in delete_meme.response.text
