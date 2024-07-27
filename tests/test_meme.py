@@ -12,10 +12,10 @@ from tests.data.payloads import create_meme_payload, create_meme_payload_without
 @allure.description('check user authorize procedure')
 @allure.tag("Positive")
 @allure.severity('Blocker')
-def test_user_authorize_with_mandatory_field(create_token):
-    create_token.create_token(payloads.token_payload)
-    assert create_token.check_status_code_is_(200)
-    assert create_token.check_response_title_is_(payloads.token_payload['name'])
+def test_user_authorize_with_mandatory_field(create_user_token):
+    create_user_token.create_token(payloads.token_payload)
+    assert create_user_token.check_status_code_is_(200)
+    assert create_user_token.check_response_title_is_(payloads.token_payload['name'])
 
 
 @allure.feature('authorization')
@@ -23,10 +23,10 @@ def test_user_authorize_with_mandatory_field(create_token):
 @allure.description('check user authorize procedure')
 @allure.tag("Negative")
 @allure.severity('High')
-def test_user_authorize_with_invalid_mandatory_field(create_token):
-    create_token.create_token(payloads.invalid_mandatory_field_token_payload)
-    assert create_token.check_status_code_is_(400)
-    assert 'Invalid parameters' in create_token.response.text
+def test_user_authorize_with_invalid_mandatory_field(create_user_token):
+    create_user_token.create_token(payloads.invalid_mandatory_field_token_payload)
+    assert create_user_token.check_status_code_is_(400)
+    assert 'Invalid parameters' in create_user_token.response.text
 
 
 @allure.feature('authorization')
@@ -34,10 +34,10 @@ def test_user_authorize_with_invalid_mandatory_field(create_token):
 @allure.description('check user authorize procedure')
 @allure.tag("Positive")
 @allure.severity('High')
-def test_user_authorize_with_format_mandatory_field(create_token):
-    create_token.create_token(payloads.invalid_mandatory_field_token_payload)
-    assert create_token.check_status_code_is_(400)
-    assert '400 Bad Request' in create_token.response.text
+def test_user_authorize_with_format_mandatory_field(create_user_token):
+    create_user_token.create_token(payloads.invalid_mandatory_field_token_payload)
+    assert create_user_token.check_status_code_is_(400)
+    assert '400 Bad Request' in create_user_token.response.text
 
 
 @allure.feature('meme set')
@@ -198,7 +198,7 @@ def test_delete_alien_meme(create_meme, get_token, delete_meme):
     obsolete_token = "T0vW7i7YAmXgTXL"
     create_meme.create_meme(create_meme_payload, get_token)
     delete_meme.delete_meme_by_id(not_my_meme_id, obsolete_token)
-    assert delete_meme.check_status_code_is_(123)
+    assert delete_meme.check_status_code_is_(403)
     assert 'You are not the meme owner' in delete_meme.response.text
 
 

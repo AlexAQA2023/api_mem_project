@@ -9,7 +9,7 @@ from endpoints.get_specific_meme import GetSpecificMeme
 from endpoints.post_auth import PostAuth
 from endpoints.post_meme import PostMeme
 from endpoints.put_meme import PutMeme
-from tests.data.payloads import default_meme_payload, token_payload
+from tests.data.payloads import default_meme_payload
 
 BASE_URL = "http://167.172.172.115:52355"
 AUTH_ENDPOINT = "/authorize"
@@ -78,3 +78,8 @@ def create_default_meme(get_token):
     yield default_meme__id
     requests.delete(f'{base_url}/{default_meme__id}')
     print(f'Deleted meme with id {default_meme__id}')
+
+
+@pytest.fixture()
+def create_user_token():
+    return PostAuth()

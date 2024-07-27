@@ -8,12 +8,33 @@ from tests.data.headers import headers_template
 class PostAuth(BaseApi):
     @allure.step('Create token')
     def create_token(self, payload, header=None):
-        headers = header if header else headers_template
+        # headers = header if header else headers_template
+        # self.response = requests.post(
+        #     url=f'{base_url}/authorize',
+        #     json=payload,
+        #     headers=headers
+        # )
+        # token = self.response.json()['token']
+        # print(self.response.json()['token'])
+        # return token
+
         self.response = requests.post(
-            url=f'{base_url}/authorize',
+            f'{base_url}/authorize',
             json=payload,
-            headers=headers
+            headers={
+                'Content-Type': 'application/json'
+            }
         )
-        token = self.response.json()['token']
-        print(self.response.json()['token'])
-        return token
+        try:
+            self.response_json = self.response.json()
+        except requests.exceptions.JSONDecodeError:
+            print(f"Failed to decode JSON response. Status code: {self.response.status_code}")
+            print(f"Response text: {self.response.text}")
+            self.response_json = {}
+
+        if self.response.status_code == 200:
+            self.token = self.response_json.get('token')
+        else:
+            self.token = None
+
+        return self.response_json
