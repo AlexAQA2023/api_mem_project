@@ -136,10 +136,13 @@ def test_update_meme_with_wrong_format_id_field(create_default_meme, update_meme
     assert 'Not Found' in update_meme.response.text
 
 
-# def test_delete_meme(create_meme, get_token, delete_meme):
-#     create_meme.create_meme(create_meme_payload, get_token)
-#
-#
+def test_delete_meme(create_meme, get_token, delete_meme):
+    token = get_token
+    create_meme.create_meme(create_meme_payload, token)
+    meme_id = create_meme.response.json()['id']
+    delete_meme.delete_meme_by_id(meme_id, token)
+    assert delete_meme.check_status_code_is_(200)
+    assert f'Meme with id {meme_id} successfully deleted' in delete_meme.response.text
 #
 # def test_delete_already_deleted_meme_by_id(create_default_meme, get_token, delete_meme):
 #     delete_meme.delete_meme_by_id(create_default_meme, get_token)
