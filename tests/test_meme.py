@@ -70,9 +70,9 @@ def test_get_all_meme_without_valid_token(get_overall_meme_set, get_token):
 @allure.severity('Positive')
 def test_get_specific_meme_by_id(get_meme_by_id, create_default_meme, get_token):
     meme_id = create_default_meme
-    get_meme_by_id.find_meme_by_id(get_token, 345)
+    response = get_meme_by_id.find_meme_by_id(get_token, meme_id)
     assert get_meme_by_id.check_status_code_is_(200)
-    # assert get_meme_by_id.find_meme_by_id['id'] == meme_id
+    assert response['id'] == meme_id
 
 
 @allure.feature('token ')

@@ -14,9 +14,9 @@ class GetSpecificMeme(BaseApi):
                                      }
                                      )
         try:
-            self.response_json = self.response.json()['id']
+            self.response_json = self.response.json()
         except requests.exceptions.JSONDecodeError:
             print(f"Failed to decode JSON response. Status code: {self.response.status_code}")
             print(f"Response text: {self.response.text}")
             self.response_json = {}
-        print(self.response_json)
+        return self.response_json
