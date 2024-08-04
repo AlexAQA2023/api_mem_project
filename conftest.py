@@ -17,21 +17,12 @@ AUTH_ENDPOINT = "/authorize"
 
 @pytest.fixture(scope='session')
 def get_token():
+    post_auth = PostAuth()
     payload = {
-        "name": "string"
+        "name": "made_by_fixture"
     }
-    response = requests.post(f"{BASE_URL}{AUTH_ENDPOINT}", json=payload)
-    if response.status_code == 200:
-        try:
-            token = response.json().get('token')
-            if token:
-                return token
-            else:
-                pytest.fail(f"Token not found in response: {response.json()}")
-        except ValueError:
-            pytest.fail(f"Failed to parse JSON response: {response.text}")
-    else:
-        pytest.fail(f"Authorization failed. Status code: {response.status_code}")
+    response_json_token_inside = post_auth.create_token(payload)
+    return response_json_token_inside
 
 
 @pytest.fixture()

@@ -15,7 +15,6 @@ class PostAuth(BaseApi):
         #     headers=headers
         # )
         # token = self.response.json()['token']
-        # print(self.response.json()['token'])
         # return token
 
         self.response = requests.post(
@@ -33,8 +32,8 @@ class PostAuth(BaseApi):
             self.response_json = {}
 
         if self.response.status_code == 200:
-            self.token = self.response_json.get('token')
+            self.token = self.response.json()['token']
         else:
             self.token = None
 
-        return self.response_json
+        return self.response.json()['token']
