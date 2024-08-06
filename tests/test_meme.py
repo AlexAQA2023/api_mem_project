@@ -24,19 +24,8 @@ def test_user_authorize_with_mandatory_field(create_user_token):
 @allure.tag("Negative")
 @allure.severity('High')
 def test_user_authorize_with_invalid_mandatory_field(create_user_token):
-    create_user_token.create_token(payloads.invalid_mandatory_field_token_payload)
-    assert create_user_token.check_status_code_is_(400)
-    assert 'Invalid parameters' in create_user_token.response.text
-
-
-@allure.feature('authorization')
-@allure.story('pre-steps before main tests')
-@allure.description('check user authorize procedure')
-@allure.tag("Positive")
-@allure.severity('High')
-def test_user_authorize_with_format_mandatory_field(create_user_token):
-    create_user_token.create_token(payloads.invalid_mandatory_field_token_payload)
-    assert create_user_token.check_status_code_is_(400)
+    create_user_token.invalid_authorize()
+    create_user_token.check_status_code_is_(400)
 
 
 @allure.feature('meme set')
