@@ -129,13 +129,17 @@ def test_create_meme_with_invalid_token(create_meme, get_token):
 @allure.description('check that system is able to update a mem')
 @allure.tag("High")
 @allure.severity('Positive')
-def test_update_meme_with_valid_data(create_default_meme, update_meme, get_token):
+def test_update_meme_with_valid_data(create_default_meme, update_meme, get_token, get_meme_by_id):
     token = get_token
     payload_upd = payloads.update_meme_payload
     payload_upd['id'] = create_default_meme
     update_meme.update_mem(payload_upd, token, payload_upd['id'])
     assert update_meme.check_status_code_is_(200)
+    assert get_meme_by_id.find_meme_by_id(get_token, payload_upd['id'])
+    assert update_meme.response_json['url'] == payloads.update_meme_payload['url']
+    assert update_meme.response_json['tags'] == payloads.update_meme_payload['tags']
     assert update_meme.response_json['text'] == payloads.update_meme_payload['text']
+    assert update_meme.response_json['info'] == payloads.update_meme_payload['info']
 
 
 @allure.feature('meme update')
@@ -157,13 +161,17 @@ def test_update_meme_with_wrong_format_id_field(create_default_meme, update_meme
 @allure.description('check that system is able to delete a meme')
 @allure.tag("High")
 @allure.severity('Positive')
-def test_delete_meme(create_meme, get_token, delete_meme):
+def test_delete_meme(create_meme, get_token, delete_meme, get_meme_by_id):
     token = get_token
     create_meme.create_meme(create_meme_payload, token)
     meme_id = create_meme.response.json()['id']
     delete_meme.delete_meme_by_id(meme_id, token)
     assert delete_meme.check_status_code_is_(200)
     assert delete_meme.check_response_text_is(f'Meme with id {meme_id} successfully deleted')
+    get_meme_by_id.find_deleted_meme_by_id(meme_id)
+    assert delete_meme.check_status_code_is_(404)
+
+
 
 
 @allure.feature('meme delete')
