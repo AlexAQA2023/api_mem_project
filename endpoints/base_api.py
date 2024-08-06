@@ -22,6 +22,9 @@ class BaseApi:
     def check_negative_response_title_is_(self, title):
         return self.response.json()['title'] == title
 
+    def check_response_text_is(self, response_text):
+        return response_text in self.response.text
+
     def check_json_decoder_error(self):
         if self.response.status_code == 200:
             try:
