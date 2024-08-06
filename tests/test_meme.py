@@ -79,10 +79,15 @@ def test_is_token_alive(get_is_live_token, get_token):
 @allure.description('check that system creates meme')
 @allure.tag("Blocker")
 @allure.severity('Positive')
-def test_create_meme_with_all_field_filled(create_meme, get_token):
+def test_create_meme_with_all_field_filled(create_meme, get_token,get_meme_by_id):
     create_meme.create_meme(create_meme_payload, get_token)
+    meme_id = create_meme.response.json()['id']
     assert create_meme.check_status_code_is_(200)
+    assert get_meme_by_id.find_meme_by_id(get_token,meme_id)
     assert create_meme.response_json['url'] == create_meme_payload['url']
+    assert create_meme.response_json['text'] == create_meme_payload['text']
+    assert create_meme.response_json['tags'] == create_meme_payload['tags']
+    assert create_meme.response_json['info'] == create_meme_payload['info']
 
 
 @allure.feature('meme creation')
