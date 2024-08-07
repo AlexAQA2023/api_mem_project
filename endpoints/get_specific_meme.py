@@ -21,7 +21,8 @@ class GetSpecificMeme(BaseApi):
             self.response_json = {}
         return self.response_json
 
-    def find_deleted_meme_by_id(self, meme_id):
+    def find_deleted_meme_by_id(self, meme_id, code):
         self.response = requests.get(
             url=f"{base_url}/{meme_id}"
         )
+        return self.response.status_code == code

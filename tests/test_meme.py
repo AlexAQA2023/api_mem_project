@@ -168,10 +168,7 @@ def test_delete_meme(create_meme, get_token, delete_meme, get_meme_by_id):
     delete_meme.delete_meme_by_id(meme_id, token)
     assert delete_meme.check_status_code_is_(200)
     assert delete_meme.check_response_text_is(f'Meme with id {meme_id} successfully deleted')
-    get_meme_by_id.find_deleted_meme_by_id(meme_id)
-    assert delete_meme.check_status_code_is_(404)
-
-
+    assert get_meme_by_id.find_deleted_meme_by_id(meme_id, 404)
 
 
 @allure.feature('meme delete')
